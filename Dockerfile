@@ -58,6 +58,8 @@ RUN chown -R node:node /app
 
 RUN git config --system user.name "Callum"
 RUN git config --system user.email "callumr@hey.com"
+RUN git config --global remote.pushDefault origin
+RUN git config --global push.default current
 
 # Security hardening: Run as non-root user
 # The node:22-bookworm image includes a 'node' user (uid 1000)
