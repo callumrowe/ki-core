@@ -54,7 +54,7 @@ RUN pnpm ui:build
 ENV NODE_ENV=production
 
 # Allow non-root user to write temp files during runtime/tests.
-RUN chown -R node:node /app
+# RUN chown -R node:node /app
 
 RUN git config --system user.name "Callum"
 RUN git config --system user.email "callumr@hey.com"
