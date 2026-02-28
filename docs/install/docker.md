@@ -50,6 +50,7 @@ This script:
 Optional env vars:
 
 - `OPENCLAW_DOCKER_APT_PACKAGES` — install extra apt packages during build
+- `OPENCLAW_INSTALL_BROWSER` — browser install toggle (`1` default, set `0` to disable)
 - `OPENCLAW_EXTRA_MOUNTS` — add extra host bind mounts
 - `OPENCLAW_HOME_VOLUME` — persist `/home/node` in a named volume
 
