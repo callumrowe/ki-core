@@ -1,6 +1,10 @@
 services:
   openclaw-gateway:
-    build: .
+    build:
+      context: .
+      shm_size: "1gb"
+      args:
+        OPENCLAW_INSTALL_BROWSER: "1"
     image: ${OPENCLAW_IMAGE:-openclaw:local}
     environment:
       HOME: /home/node
@@ -10,10 +14,12 @@ services:
       #CLAUDE_WEB_SESSION_KEY: ${CLAUDE_WEB_SESSION_KEY}
       #CLAUDE_WEB_COOKIE: ${CLAUDE_WEB_COOKIE}
     volumes:
+      # Mount config
       - ${OPENCLAW_CONFIG_DIR}:/home/node/.openclaw
+      # Mount workspace and memz
       - ${OPENCLAW_WORKSPACE_DIR}:/home/node/.openclaw/workspace
-      - ${OPENCLAW_REPO_DIR}:/home/node/.openclaw/workspace/openclaw
-      - ${OBSIDIAN_DIR}:/home/node/obsidian-vault
+      # Mount code dir
+      - /opt/openclaw:/home/node/.openclaw/workspace/openclaw
     ports:
       - "127.0.0.1:${OPENCLAW_GATEWAY_PORT:-18789}:18789"
       - "127.0.0.1:${OPENCLAW_BRIDGE_PORT:-18790}:18790"
