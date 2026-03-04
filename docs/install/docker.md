@@ -60,6 +60,7 @@ Optional env vars:
 
 - `OPENCLAW_IMAGE` — use a remote image instead of building locally (e.g. `ghcr.io/openclaw/openclaw:latest`)
 - `OPENCLAW_DOCKER_APT_PACKAGES` — install extra apt packages during build
+- `OPENCLAW_INSTALL_BROWSER` — build arg passthrough for local image builds (`1` installs Chromium + Xvfb in the image)
 - `OPENCLAW_EXTRA_MOUNTS` — add extra host bind mounts
 - `OPENCLAW_HOME_VOLUME` — persist `/home/node` in a named volume
 - `OPENCLAW_SANDBOX` — opt in to Docker gateway sandbox bootstrap. Only explicit truthy values enable it: `1`, `true`, `yes`, `on`
@@ -345,7 +346,14 @@ export OPENCLAW_DOCKER_APT_PACKAGES="git curl jq"
 ./docker-setup.sh
 ```
 
-3. **Install Playwright browsers without `npx`** (avoids npm override conflicts):
+3. **Bake Chromium + Xvfb into the image** (avoids runtime browser installs):
+
+```bash
+export OPENCLAW_INSTALL_BROWSER=1
+./docker-setup.sh
+```
+
+4. **Install Playwright browsers without `npx`** (avoids npm override conflicts):
 
 ```bash
 docker compose run --rm openclaw-cli \
@@ -355,7 +363,7 @@ docker compose run --rm openclaw-cli \
 If you need Playwright to install system deps, rebuild the image with
 `OPENCLAW_DOCKER_APT_PACKAGES` instead of using `--with-deps` at runtime.
 
-4. **Persist Playwright browser downloads**:
+5. **Persist Playwright browser downloads**:
 
 - Set `PLAYWRIGHT_BROWSERS_PATH=/home/node/.cache/ms-playwright` in
   `docker-compose.yml`.
