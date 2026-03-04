@@ -174,6 +174,7 @@ describe("docker-setup.sh", () => {
     expect(result.status).toBe(0);
     const envFile = await readFile(join(activeSandbox.rootDir, ".env"), "utf8");
     expect(envFile).toContain("OPENCLAW_DOCKER_APT_PACKAGES=ffmpeg build-essential");
+    expect(envFile).toContain("OPENCLAW_INSTALL_BROWSER=");
     expect(envFile).toContain("OPENCLAW_EXTRA_MOUNTS=");
     expect(envFile).toContain("OPENCLAW_HOME_VOLUME=openclaw-home");
     const extraCompose = await readFile(
@@ -185,9 +186,25 @@ describe("docker-setup.sh", () => {
     expect(extraCompose).toContain("openclaw-home:");
     const log = await readFile(activeSandbox.logPath, "utf8");
     expect(log).toContain("--build-arg OPENCLAW_DOCKER_APT_PACKAGES=ffmpeg build-essential");
+    expect(log).toContain("--build-arg OPENCLAW_INSTALL_BROWSER=");
     expect(log).toContain("run --rm openclaw-cli onboard --mode local --no-install-daemon");
     expect(log).toContain("run --rm openclaw-cli config set gateway.mode local");
     expect(log).toContain("run --rm openclaw-cli config set gateway.bind lan");
+  });
+
+  it("passes through OPENCLAW_INSTALL_BROWSER for local builds", async () => {
+    const activeSandbox = requireSandbox(sandbox);
+
+    const result = runDockerSetup(activeSandbox, {
+      OPENCLAW_INSTALL_BROWSER: "1",
+    });
+
+    expect(result.status).toBe(0);
+    const envFile = await readFile(join(activeSandbox.rootDir, ".env"), "utf8");
+    expect(envFile).toContain("OPENCLAW_INSTALL_BROWSER=1");
+
+    const log = await readFile(activeSandbox.logPath, "utf8");
+    expect(log).toContain("--build-arg OPENCLAW_INSTALL_BROWSER=1");
   });
 
   it("precreates config identity dir for CLI device auth writes", async () => {
